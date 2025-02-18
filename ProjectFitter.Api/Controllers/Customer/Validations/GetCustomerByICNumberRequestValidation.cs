@@ -4,11 +4,11 @@ using ProjectFitter.Api.Services.Abstractions.DataAccess;
 
 namespace ProjectFitter.Api.Controllers.Customer.Validations
 {
-    public class LoginWithICNumberRequestValidation : AbstractValidator<LoginWithICNumberRequest>
+    public class GetCustomerByICNumberRequestValidation : AbstractValidator<GetCustomerByICNumberRequest>
     {
         private readonly IICNumberRepository _icNumberRepository;
 
-        public LoginWithICNumberRequestValidation(IICNumberRepository icNumberRepository)
+        public GetCustomerByICNumberRequestValidation(IICNumberRepository icNumberRepository)
         {
             _icNumberRepository = icNumberRepository;
 

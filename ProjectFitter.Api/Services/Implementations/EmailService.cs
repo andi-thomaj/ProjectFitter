@@ -1,10 +1,11 @@
 ﻿using ProjectFitter.Api.Controllers.Customer.Requests;
 using ProjectFitter.Api.Helpers.ResultPattern;
+using ProjectFitter.Api.Services.Abstractions;
 using ProjectFitter.Api.Services.Abstractions.DataAccess;
 
 namespace ProjectFitter.Api.Services.Implementations
 {
-    public class EmailService(IICNumberRepository icNumberRepository)
+    public class EmailService(IICNumberRepository icNumberRepository) : IEmailService
     {
         public async Task<Result> SendEmail(SendEmailRequest request)
         {

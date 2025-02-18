@@ -11,6 +11,7 @@ namespace ProjectFitter.Api.Controllers.Customer.Validations
         public ValidateSMSCodeRequestValidation(IICNumberRepository icNumberRepository)
         {
             _icNumberRepository = icNumberRepository;
+
             RuleFor(x => x.SMSCode)
                 .NotNull()
                 .WithMessage("SMS code is required")

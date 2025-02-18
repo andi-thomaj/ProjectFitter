@@ -1,4 +1,5 @@
 ﻿using ProjectFitter.Api.Controllers.Customer.Requests;
+using ProjectFitter.Api.Controllers.Customer.Responses;
 using ProjectFitter.Api.Helpers.ResultPattern;
 
 namespace ProjectFitter.Api.Services.Abstractions
@@ -12,5 +13,6 @@ namespace ProjectFitter.Api.Services.Abstractions
         Task<Result> CreateSixDigitPin(CreateSixDigitPinRequest request);
         Task<Result> ActivateBiometricLogin(string icNumber);
         Task<Result> LoginWithICNumber(string icNumber);
+        Task<Result<GetCustomerByICNumberResponse>> GetCustomerByICNumber(string icNumber);
     }
 }

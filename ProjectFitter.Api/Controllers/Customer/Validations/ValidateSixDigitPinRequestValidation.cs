@@ -13,7 +13,6 @@ namespace ProjectFitter.Api.Controllers.Customer.Validations
         {
             _icNumberRepository = icNumberRepository;
             _customerRepository = customerRepository;
-            _icNumberRepository = icNumberRepository;
 
             RuleFor(x => x.SixDigitPin)
                 .NotNull()
@@ -21,9 +20,9 @@ namespace ProjectFitter.Api.Controllers.Customer.Validations
                 .NotEmpty()
                 .WithMessage("Six digit pin is required")
                 .Matches(@"^\d{6}$")
-                .WithMessage("Six digit pin is invalid.")
+                .WithMessage("Six digit pin is invalid")
                 .MustAsync(async (request, ignore, cancellationToken) => await SixDigitPinExists(request.ICNumber, request.SixDigitPin, CancellationToken.None))
-                .WithMessage("fsa");
+                .WithMessage("Six digit pin is incorrect");
 
             RuleFor(x => x.ICNumber)
                 .NotEmpty()

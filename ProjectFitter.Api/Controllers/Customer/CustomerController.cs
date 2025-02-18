@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using ProjectFitter.Api.Controllers.Customer.Requests;
-using ProjectFitter.Api.Controllers.Customer.Responses;
-using ProjectFitter.Api.Controllers.Customer.Validations;
 using ProjectFitter.Api.Services.Abstractions;
 
 namespace ProjectFitter.Api.Controllers.Customer
@@ -22,10 +20,11 @@ namespace ProjectFitter.Api.Controllers.Customer
         , IValidator<CreateSixDigitPinRequest> createSixDigitPinRequestValidator
         , IValidator<ValidateSixDigitPinRequest> validateSixDigitPinRequestValidator
         , IValidator<ActivateBiometricLoginRequest> activateBiometricLoginRequestValidator
+        , IValidator<LoginWithICNumberRequest> loginWithICNumberRequestValidation
+        , IValidator<GetCustomerByICNumberRequest> getCustomerByICNumberRequestValidator
         ) : ControllerBase
     {
-        [HttpPost]
-        [ActionName(nameof(CreateDraftCustomer))]
+        [HttpPost(nameof(CreateDraftCustomer))]
         public async Task<ActionResult> CreateDraftCustomer([FromBody] RegisterCustomerRequest request)
         {
             var validationResult = await registerCustomerRequestValidator.ValidateAsync(request);
@@ -44,8 +43,7 @@ namespace ProjectFitter.Api.Controllers.Customer
             return Ok();
         }
 
-        [HttpPost]
-        [ActionName(nameof(SendSMS))]
+        [HttpPost(nameof(SendSMS))]
         public async Task<ActionResult> SendSMS([FromBody] SendSMSRequest request)
         {
             var validationResult = await sendSMSRequestValidator.ValidateAsync(request);
@@ -63,8 +61,7 @@ namespace ProjectFitter.Api.Controllers.Customer
             return Ok();
         }
 
-        [HttpPost]
-        [ActionName(nameof(ValidateSMSCode))]
+        [HttpPost(nameof(ValidateSMSCode))]
         public async Task<ActionResult> ValidateSMSCode([FromBody] ValidateSMSCodeRequest request)
         {
             var validationResult = await validateSMSCodeRequestValidator.ValidateAsync(request);
@@ -88,8 +85,7 @@ namespace ProjectFitter.Api.Controllers.Customer
             return Ok();
         }
 
-        [HttpPost]
-        [ActionName(nameof(SendEmail))]
+        [HttpPost(nameof(SendEmail))]
         public async Task<ActionResult> SendEmail([FromBody] SendEmailRequest request)
         {
             var validationResult = await sendEmailRequestValidator.ValidateAsync(request);
@@ -107,8 +103,7 @@ namespace ProjectFitter.Api.Controllers.Customer
             return Ok();
         }
 
-        [HttpPost]
-        [ActionName(nameof(ValidateEmailCode))]
+        [HttpPost(nameof(ValidateEmailCode))]
         public async Task<ActionResult> ValidateEmailCode([FromBody] ValidateEmailCodeRequest request)
         {
             var validationResult = await validateEmailCodeRequestValidator.ValidateAsync(request);
@@ -132,8 +127,7 @@ namespace ProjectFitter.Api.Controllers.Customer
             return Ok();
         }
 
-        [HttpGet]
-        [ActionName(nameof(AcceptTermsAndConditions))]
+        [HttpGet(nameof(AcceptTermsAndConditions))]
         public async Task<ActionResult> AcceptTermsAndConditions([FromQuery] string icNumber)
         {
             var validationResult = await acceptTermsAndConditionsRequestValidator.ValidateAsync(new AcceptTermsAndConditionsRequest { ICNumber = icNumber });
@@ -151,8 +145,7 @@ namespace ProjectFitter.Api.Controllers.Customer
             return Ok();
         }
 
-        [HttpPost]
-        [ActionName(nameof(CreateSixDigitPin))]
+        [HttpPost(nameof(CreateSixDigitPin))]
         public async Task<ActionResult> CreateSixDigitPin([FromBody] CreateSixDigitPinRequest request)
         {
             var validationResult = await createSixDigitPinRequestValidator.ValidateAsync(request);
@@ -170,8 +163,7 @@ namespace ProjectFitter.Api.Controllers.Customer
             return Ok();
         }
 
-        [HttpPost]
-        [ActionName(nameof(ValidateSixDigitPin))]
+        [HttpPost(nameof(ValidateSixDigitPin))]
         public async Task<ActionResult> ValidateSixDigitPin([FromBody] ValidateSixDigitPinRequest request)
         {
             var validationResult = await validateSixDigitPinRequestValidator.ValidateAsync(request);
@@ -183,8 +175,7 @@ namespace ProjectFitter.Api.Controllers.Customer
             return Ok();
         }
 
-        [HttpGet]
-        [ActionName(nameof(ActivateBiometricLogin))]
+        [HttpGet(nameof(ActivateBiometricLogin))]
         public async Task<ActionResult> ActivateBiometricLogin([FromQuery] string icNumber)
         {
             var validationResult = await activateBiometricLoginRequestValidator.ValidateAsync(new ActivateBiometricLoginRequest { ICNumber = icNumber });
@@ -202,12 +193,39 @@ namespace ProjectFitter.Api.Controllers.Customer
             return Ok();
         }
 
-        [HttpGet]
-        [ActionName(nameof(LoginWithICNumber))]
+        [HttpGet(nameof(LoginWithICNumber))]
         public async Task<ActionResult> LoginWithICNumber([FromQuery] string icNumber)
         {
+            var validationResult = await loginWithICNumberRequestValidation.ValidateAsync(new LoginWithICNumberRequest { ICNumber = icNumber });
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            var result = await customerService.LoginWithICNumber(icNumber);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error.Description);
+            }
 
             return Ok();
+        }
+
+        [HttpGet(nameof(GetCustomerByICNumber))]
+        public async Task<ActionResult> GetCustomerByICNumber([FromQuery] string icNumber)
+        {
+            var validationResult = await getCustomerByICNumberRequestValidator.ValidateAsync(new GetCustomerByICNumberRequest { ICNumber = icNumber });
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            var result = await customerService.GetCustomerByICNumber(icNumber);
+            if (result.IsFailure)
+            {
+                return BadRequest(result.Error.Description);
+            }
+            return Ok(result.Value);
         }
     }
 }

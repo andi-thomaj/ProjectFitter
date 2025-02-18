@@ -9,6 +9,8 @@ namespace ProjectFitter.Api.Controllers.Customer.Validations
         private readonly IICNumberRepository _icNumberRepository;
         public SendSMSRequestValidation(IICNumberRepository icNumberRepository)
         {
+            _icNumberRepository = icNumberRepository;
+
             RuleFor(x => x.ICNumber)
                 .NotEmpty()
                 .WithMessage("IC number is required")

@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ProjectFitter.Api.Data.Entities;
 
-namespace ProjectFitter.Api.Data.Configurations
+namespace ProjectFitter.Api.Data.Entities.Configurations
 {
     public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
@@ -32,13 +31,16 @@ namespace ProjectFitter.Api.Data.Configurations
                 .IsRequired();
 
             builder.Property(x => x.SixDigitsPin)
-                .IsRequired()
-                .HasMaxLength(6);
+                .IsRequired(false)
+                .HasMaxLength(300);
 
             builder.Property(x => x.HasConfirmedSixDigitsPin)
                 .IsRequired();
 
             builder.Property(x => x.HasEnabledSeamlessLogin)
+                .IsRequired();
+
+            builder.Property(x => x.IsDraft)
                 .IsRequired();
 
             builder.HasOne(x => x.ICNumber)

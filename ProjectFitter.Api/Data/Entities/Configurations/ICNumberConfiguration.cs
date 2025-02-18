@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectFitter.Api.Data.Entities;
 
-namespace ProjectFitter.Api.Data.Configurations
+namespace ProjectFitter.Api.Data.Entities.Configurations
 {
     public class ICNumberConfiguration : IEntityTypeConfiguration<ICNumber>
     {

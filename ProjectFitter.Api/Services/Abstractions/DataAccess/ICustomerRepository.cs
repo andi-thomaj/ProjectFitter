@@ -7,7 +7,8 @@ namespace ProjectFitter.Api.Services.Abstractions.DataAccess
         Task<bool> MobileNumberExists(string mobileNumber);
         Task<bool> EmailExists(string email);
         Task<bool> FullNameExists(string fullName);
-        Task<bool> AddCustomer(Customer? customer);
+        Task<bool> AddCustomer(Customer customer);
+        Task UpdateCustomer(Customer customer);
         Task<bool> SixDigitsMatchByICNumber(string sixDigits, string icNumber);
     }
 }
